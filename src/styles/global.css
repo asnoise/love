@@ -1,0 +1,847 @@
+:root {
+  --bg-pastel-pink: #fff0f5;
+  --bg-blush-pink: #ffdbe8;
+  --bg-peach: #ffeadb;
+  --heart-red: #e11d48;
+  --heart-soft: #ff6b8b;
+  --accent-gold: #f7b267;
+  --text-primary: #4a2535;
+  --text-muted: #7d5264;
+  --card-bg: rgba(255, 255, 255, 0.78);
+  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background: linear-gradient(
+    145deg,
+    var(--bg-pastel-pink) 0%,
+    var(--bg-blush-pink) 48%,
+    var(--bg-peach) 100%
+  );
+  background-attachment: fixed;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-shell {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* =========================================
+   Ambient Floating Heart Particles
+========================================= */
+.floating-particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.floating-particle-heart {
+  position: absolute;
+  bottom: -40px;
+  display: inline-block;
+  animation-name: floatUpHeart;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.floating-particle-heart svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@keyframes floatUpHeart {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.7) rotate(-8deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.45;
+  }
+  50% {
+    transform: translate3d(var(--sway-x, 18px), -55vh, 0) scale(1) rotate(8deg);
+  }
+  85% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: translate3d(calc(var(--sway-x, 18px) * -0.5), -115vh, 0)
+      scale(0.85) rotate(-10deg);
+    opacity: 0;
+  }
+}
+
+/* =========================================
+   Music Control Button
+========================================= */
+.music-control {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 15px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 143, 163, 0.45);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(225, 29, 72, 0.12);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.music-control:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(225, 29, 72, 0.18);
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.music-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 13px;
+}
+
+.music-bars span {
+  width: 3px;
+  height: 5px;
+  border-radius: 2px;
+  background: var(--heart-red);
+  transition: height 0.2s ease;
+}
+
+.music-bars span:nth-child(2) {
+  height: 10px;
+}
+
+.music-bars span:nth-child(3) {
+  height: 7px;
+}
+
+.music-control.is-playing .music-bars span {
+  animation: musicBarBounce 0.9s ease-in-out infinite;
+}
+
+.music-control.is-playing .music-bars span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.music-control.is-playing .music-bars span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes musicBarBounce {
+  0%,
+  100% {
+    height: 4px;
+  }
+  50% {
+    height: 13px;
+  }
+}
+
+/* =========================================
+   Scene 1: Opening Screen
+========================================= */
+.opening-screen {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.opening-screen.is-leaving {
+  opacity: 0;
+  transform: scale(0.97) translateY(-10px);
+}
+
+.opening-card {
+  max-width: 540px;
+  width: 100%;
+  text-align: center;
+  padding: 44px 28px;
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.56);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 24px 60px rgba(225, 29, 72, 0.12),
+    inset 0 0 30px rgba(255, 255, 255, 0.55);
+  animation: fadeSlideUp 0.9s ease forwards;
+}
+
+.opening-heart-badge {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  margin-bottom: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.opening-heart-svg {
+  width: 68px;
+  height: 68px;
+  filter: drop-shadow(0 8px 18px rgba(225, 29, 72, 0.34));
+  animation: gentleHeartbeat 1.7s ease-in-out infinite;
+}
+
+.opening-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5.2vw, 3.1rem);
+  font-weight: 700;
+  line-height: 1.18;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+  text-shadow: 0 2px 14px rgba(255, 107, 139, 0.18);
+}
+
+.opening-subtitle {
+  font-size: clamp(1rem, 2.8vw, 1.2rem);
+  color: var(--text-muted);
+  min-height: 1.6em;
+  font-weight: 500;
+  margin-bottom: 26px;
+}
+
+.opening-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 26px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, var(--heart-soft), var(--heart-red));
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.96rem;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  box-shadow: 0 10px 26px rgba(225, 29, 72, 0.28);
+  transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.25s ease;
+}
+
+.opening-cta.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.opening-cta:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 14px 30px rgba(225, 29, 72, 0.36);
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  background: var(--heart-red);
+  margin-left: 3px;
+  vertical-align: -2px;
+  animation: blinkCursor 0.8s steps(2, start) infinite;
+}
+
+@keyframes blinkCursor {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes gentleHeartbeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.14);
+  }
+  40% {
+    transform: scale(1);
+  }
+  60% {
+    transform: scale(1.09);
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   Main Story Container & Reveal Transitions
+========================================= */
+.story-main {
+  position: relative;
+  z-index: 2;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 40px 20px 84px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 54px;
+  animation: fadeSlideUp 0.9s ease forwards;
+}
+
+.reveal-block {
+  width: 100%;
+  opacity: 0;
+  transform: translateY(28px);
+  pointer-events: none;
+  transition: opacity 0.95s ease, transform 0.95s ease;
+}
+
+.reveal-block.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* =========================================
+   Scene 2: Animated Heart Tree
+========================================= */
+.tree-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 12px;
+}
+
+.tree-canvas-wrapper {
+  width: 100%;
+  max-width: 540px;
+  aspect-ratio: 1 / 0.9;
+  position: relative;
+}
+
+.tree-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tree-caption {
+  margin-top: 10px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.15rem, 3vw, 1.45rem);
+  color: var(--text-muted);
+  text-align: center;
+  max-width: 520px;
+  padding: 0 12px;
+}
+
+/* =========================================
+   Scene 3: Relationship Countdown
+========================================= */
+.countdown-section {
+  display: flex;
+  justify-content: center;
+}
+
+.glass-panel {
+  width: 100%;
+  max-width: 780px;
+  padding: 36px 24px;
+  border-radius: 28px;
+  background: var(--card-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 18px 46px rgba(225, 29, 72, 0.1),
+    0 0 36px rgba(255, 182, 193, 0.25);
+  text-align: center;
+}
+
+.section-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(1.95rem, 4.6vw, 2.7rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.section-subtext {
+  font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.countdown-box {
+  padding: 20px 10px;
+  border-radius: 20px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 240, 245, 0.95) 0%,
+    rgba(255, 228, 236, 0.85) 100%
+  );
+  border: 1px solid rgba(255, 179, 193, 0.45);
+  box-shadow: 0 8px 20px rgba(225, 29, 72, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.countdown-value {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5vw, 2.85rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--heart-red);
+  animation: digitTick 0.35s ease;
+}
+
+.countdown-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+@keyframes digitTick {
+  0% {
+    transform: translateY(-3px) scale(0.96);
+    opacity: 0.75;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* =========================================
+   Scene 4: Romantic Letter & Cute Characters
+========================================= */
+.letter-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heart-button-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+}
+
+.heart-letter-btn {
+  position: relative;
+  width: 210px;
+  height: 190px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  animation: gentleHeartbeat 2.2s ease-in-out infinite;
+}
+
+.heart-letter-btn:hover {
+  transform: scale(1.08);
+}
+
+.heart-letter-btn:active {
+  transform: scale(0.96);
+}
+
+.heart-btn-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 16px 32px rgba(225, 29, 72, 0.35));
+}
+
+.heart-btn-label {
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+  font-family: var(--font-serif);
+  font-size: 1.32rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  max-width: 138px;
+  margin-top: -12px;
+  text-shadow: 0 2px 8px rgba(136, 19, 55, 0.35);
+}
+
+.heart-btn-hint {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.letter-and-characters {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.9fr);
+  gap: 28px;
+  align-items: start;
+  animation: fadeSlideUp 0.8s ease forwards;
+}
+
+.letter-panel {
+  padding: 36px 32px;
+  border-radius: 28px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 246, 249, 0.95) 0%,
+    rgba(255, 232, 240, 0.92) 55%,
+    rgba(255, 237, 224, 0.95) 100%
+  );
+  border: 1px solid rgba(255, 179, 193, 0.65);
+  box-shadow: 0 22px 54px rgba(225, 29, 72, 0.14),
+    0 0 42px rgba(255, 182, 193, 0.35);
+}
+
+.letter-header-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  color: var(--heart-soft);
+  font-size: 0.95rem;
+}
+
+.ornament-line {
+  height: 1px;
+  width: 64px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(225, 29, 72, 0.35),
+    transparent
+  );
+}
+
+.letter-typed-text {
+  font-family: var(--font-serif);
+  font-size: clamp(1.22rem, 2.5vw, 1.44rem);
+  line-height: 1.72;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  font-weight: 500;
+}
+
+.letter-signature {
+  margin-top: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--heart-red);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.letter-signature.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================================
+   Cute Animated Character Cards
+========================================= */
+.characters-column {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.character-card {
+  position: relative;
+  padding: 18px 16px 14px;
+  border-radius: 24px;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.94) 0%,
+    rgba(255, 236, 243, 0.9) 100%
+  );
+  border: 1px solid rgba(255, 194, 212, 0.65);
+  box-shadow: 0 12px 30px rgba(225, 29, 72, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.character-card:hover {
+  transform: translateY(-5px) rotate(1.5deg) scale(1.02);
+  box-shadow: 0 18px 36px rgba(225, 29, 72, 0.16);
+}
+
+.card-float-1 {
+  animation: cardBob 4.2s ease-in-out infinite;
+}
+
+.card-float-2 {
+  animation: cardBob 4.8s ease-in-out 0.6s infinite;
+}
+
+.card-float-3 {
+  animation: cardBob 4.5s ease-in-out 1.2s infinite;
+}
+
+@keyframes cardBob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-0.6deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(0.8deg);
+  }
+}
+
+.character-svg {
+  width: 100%;
+  max-width: 175px;
+  height: auto;
+  display: block;
+}
+
+.character-caption {
+  margin-top: 6px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.mini-heart-decor {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 1rem;
+  animation: gentleHeartbeat 2.4s ease-in-out infinite;
+}
+
+/* =========================================
+   Scene 5: Final Surprise Screen
+========================================= */
+.final-surprise-section {
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
+}
+
+.final-surprise-card {
+  width: 100%;
+  max-width: 680px;
+  padding: 46px 28px;
+  border-radius: 32px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.86) 0%,
+    rgba(255, 228, 238, 0.88) 100%
+  );
+  border: 1px solid rgba(255, 179, 193, 0.7);
+  box-shadow: 0 24px 60px rgba(225, 29, 72, 0.16),
+    0 0 50px rgba(255, 143, 163, 0.35);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.final-heart-stage {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.final-center-heart {
+  position: relative;
+  z-index: 2;
+  animation: gentleHeartbeat 1.6s ease-in-out infinite;
+}
+
+.final-heart-svg {
+  width: 72px;
+  height: 72px;
+  filter: drop-shadow(0 10px 24px rgba(225, 29, 72, 0.42));
+}
+
+.burst-heart {
+  position: absolute;
+  opacity: 0;
+  animation: burstOut 2.8s ease-out infinite;
+}
+
+@keyframes burstOut {
+  0% {
+    transform: translate(0, 0) scale(0.4);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(1.05);
+    opacity: 0;
+  }
+}
+
+.final-glow-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.1rem, 5.4vw, 3.2rem);
+  font-weight: 700;
+  color: var(--heart-red);
+  text-shadow: 0 0 22px rgba(255, 107, 139, 0.42);
+  margin-bottom: 10px;
+}
+
+.final-subtitle {
+  font-size: clamp(1rem, 2.8vw, 1.18rem);
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+.replay-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(225, 29, 72, 0.25);
+  background: linear-gradient(135deg, #ffffff 0%, #ffe4ec 100%);
+  color: var(--heart-red);
+  font-family: var(--font-sans);
+  font-size: 0.96rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(225, 29, 72, 0.14);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.replay-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(225, 29, 72, 0.22);
+  background: #ffffff;
+}
+
+/* =========================================
+   Responsive Breakpoints (Mobile-First)
+========================================= */
+@media (max-width: 860px) {
+  .letter-and-characters {
+    grid-template-columns: 1fr;
+  }
+
+  .characters-column {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+
+@media (max-width: 640px) {
+  .story-main {
+    padding: 32px 14px 68px;
+    gap: 40px;
+  }
+
+  .countdown-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .letter-panel {
+    padding: 26px 20px;
+  }
+
+  .characters-column {
+    grid-template-columns: 1fr;
+  }
+
+  .heart-letter-btn {
+    width: 184px;
+    height: 168px;
+  }
+
+  .heart-btn-label {
+    font-size: 1.15rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
